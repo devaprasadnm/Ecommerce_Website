@@ -1,0 +1,40 @@
+{% extends 'adminside/base.html' %}
+{% block content %}
+  <div class="container pt-5 ">
+    <div class="container col-6 ">
+      <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="{{name}}" >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Description</label>
+            <input  name="desc" class="form-control" value="{{desc}}" >
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1 w-6" class="form-label">Price</label>
+            <input type="number" name="price" class="form-control" value="{{price}}">
+          </div>
+
+          <div class="mb-3">
+            <label for="exampleInputPassword1 w-6" class="form-label">Image</label>
+            <input type="file" name="img" class="form-control">
+          </div>
+
+          <img class="card" height="150px" src="{{img.url}}" />
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="offer"  id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+            Offer
+            </label>
+          </div>
+
+        <br>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="/mainuser/display" class="btn btn-primary">Back</a>
+        </form>
+        
+  </div>
+  </div>
+  {% endblock %}

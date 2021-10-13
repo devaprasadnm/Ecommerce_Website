@@ -1,0 +1,37 @@
+
+{% extends 'adminside/base.html'%}
+
+
+{% block content %}
+
+
+    <div class="container-sm m-5">
+        <table  class="table" >
+            <thead class="thead-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                {% if u.is_superuser == False %}
+                <tr>
+                    <td>{{u.first_name}}</td>
+                    <td>{{u.username}}</td>
+                    <td>{{u.email}}</td>
+                    <td> <a href="delete/{{u.username}}/" class="btn btn-danger" >Delete</a></td>
+                    <td> <a href="update/{{u.username}}/" class="btn btn-warning" >Edit</a></td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        
+        
+      </div>
+      {% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'adminside/base.html' %}
+{% block content %}
+  <div class="container pt-5 ">
+    <div class="container col-6 ">
+      <form action="" method="post">
+        
+      {% csrf_token %}
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" value="{{name}}" id="exampleInputEmail1" aria-describedby="emailHelp">
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Username</label>
+            <input type="text" name="username" class="form-control" value="{{username}}" id="exampleInputEmail1" aria-describedby="emailHelp">
+          </div>
+          <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" value="{{email}}" id="exampleInputPassword1">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a href="/mainuser/display" class="btn btn-primary">Back</a>
+        </form>
+        
+  </div>
+  </div>
+  {% endblock %}

@@ -22,11 +22,27 @@
             <input type="file" name="img" class="form-control">
           </div>
 
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="offer"  id="flexCheckChecked" checked>
-            <label class="form-check-label" for="flexCheckChecked">
-            Offer
-            </label>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="inputGroupSelect01">Offers</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01" name="offers">
+              <option selected>Choose...</option>
+              <option value="True">True</option>
+              <option value="False">False</option>
+            </select><br>
+
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="inputGroupSelect01">Categories</label>
+            </div>
+            <select class="custom-select" id="inputGroupSelect01" name="category">
+              <option selected>Choose...</option>
+              {%for category in categories %}
+              <option value="{{category.category_name}}">{{category.category_name}}</option>
+              {% endfor %}
+            </select>
+
+
           </div>
 
         <br>

@@ -1,37 +1,64 @@
-
 {% extends 'adminside/base.html'%}
 
 
 {% block content %}
 
 
-    <div class="container-sm m-5">
-        <table  class="table" >
-            <thead class="thead-dark">
-                <tr>
-                    <th>Name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for u in users %}
-                {% if u.is_superuser == False %}
-                <tr>
-                    <td>{{u.first_name}}</td>
-                    <td>{{u.username}}</td>
-                    <td>{{u.email}}</td>
-                    <td> <a href="delete/{{u.username}}/" class="btn btn-danger" >Delete</a></td>
-                    <td> <a href="update/{{u.username}}/" class="btn btn-warning" >Edit</a></td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
+<div class="container-sm m-5">
 
-        
-        
-      </div>
-      {% endblock %}
+
+    <form class="input-group" action="display" method="post">
+        {% csrf_token %}
+        <div class="form-outline">
+            <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" aria-label="Search">
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </button>
+    </form>
+
+
+    <br>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            {% if u.is_superuser == False %}
+            <tr>
+                <td>{{u.first_name}}</td>
+                <td>{{u.username}}</td>
+                <td>{{u.email}}</td>
+                <td> <a href="delete/{{u.username}}/" class="btn btn-danger">Delete</a></td>
+                <td> <a href="update/{{u.username}}/" class="btn btn-warning">Edit</a></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <ul class="pagination">
+        {% if users.has_previous %}
+        <li class="page-item">
+            <a href="?page=1" class="page-link">
+                << First</a> </li> <li class="page-item">
+                    <a href="{{users.previous_page_link}}" class="page-link">
+                        < Previous</a> </li> {% endif %} {% if users.has_next %} <li class="page-item">
+                            <a href="?page={{users.next_page_number}}" class="page-link">Next ></a>
+        </li>
+        <li class="page-item">
+            <a href="?page={{users.paginator.num_pages}}" class="page-link">Last >></a>
+        </li>
+        {% endif %}
+    </ul>
+
+
+
+</div>
+{% endblock %}

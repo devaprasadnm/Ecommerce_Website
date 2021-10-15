@@ -4,12 +4,12 @@ from django.contrib.auth.models import User,auth
 from django.contrib.auth import authenticate
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from .models import Products
+from .models import Products,Category
 # Create your views here.
 
 
 def adminlogin(request):
-    if request.session.has_key('username'):
+    if request.session.has_key('id'):
         return redirect('display')
     else:
         if request.method == 'POST':
@@ -21,7 +21,7 @@ def adminlogin(request):
             if check_user and user.is_superuser:
               
               username = user.id
-              request.session['username'] = username
+              request.session['id'] = username
              
               return JsonResponse(
                    {"success": 'pass'},
@@ -45,15 +45,29 @@ def logout(request):
     return redirect("adminlogin")
 
 def display(request):
-    if request.session.has_key('username'):
-        users = User.objects.all()
+    if request.session.has_key('id'):
+
+        if request.method == 'POST':
+
+            search =  request.POST['q'] 
+            users = User.objects.filter(
+            first_name__icontains=search)|User.objects.filter(
+            email__icontains=search)|User.objects.filter(
+            username__icontains=search)|User.objects.filter(
+            last_name__icontains=search)
+        else:     
+            users = User.objects.all()
+
+        paginator=Paginator(users,5)
+        page = request.GET.get('page')
+        users=paginator.get_page(page)
         return render(request, 'adminside/display.html',{"users":users})
     else:   
         return render(request, 'account/adminlogin.html')
 
 
 def delete(request,username):
-    if request.session.has_key('username'):
+    if request.session.has_key('id'):
         print(username)
         u = User.objects.get(username = username)
         u.delete()
@@ -62,7 +76,7 @@ def delete(request,username):
         return render(request, 'account/adminlogin.html')
 
 def update(request,username):
-    if request.session.has_key('username'):
+    if request.session.has_key('id'):
         u = User.objects.get(username = username)
         if request.method =='POST':
            name = request.POST['name']
@@ -82,14 +96,24 @@ def update(request,username):
          return render(request, 'account/adminlogin.html')
 
 def product(request):
-    if request.session.has_key('username'):
-        items = Products.objects.all()
-        return render(request, 'adminside/product.html',{"items":items})
+    if request.session.has_key('id'):
+        if request.method == 'POST':
+
+            search =  request.POST['q'] 
+            items = Products.objects.filter(
+            name__icontains=search)
+        else:     
+            items = Products.objects.all()
+
+        paginator=Paginator(items,5)
+        page = request.GET.get('page')
+        products=paginator.get_page(page)
+        return render(request, 'adminside/product.html',{"items":products})
     else:   
          return render(request, 'account/adminlogin.html')
 
 def deleteproduct(request,id):
-    if request.session.has_key('username'):
+    if request.session.has_key('id'):
         u = Products.objects.get(id = id)
         u.delete()
         return redirect("product")
@@ -97,7 +121,7 @@ def deleteproduct(request,id):
          return render(request, 'account/adminlogin.html')
 
 def updateproduct(request,id):
-    if request.session.has_key('username'):
+    if request.session.has_key('id'):
         u = Products.objects.get(id = id)
         if request.method =='POST':
            name = request.POST['name']
@@ -130,20 +154,21 @@ def updateproduct(request,id):
 
 
 def additem(request):
-    if request.session.has_key('username'):
+    if request.session.has_key('id'):
         if request.method == 'POST':
             name = request.POST['name']
             desc = request.POST['desc']
             price = request.POST['price']
-            offer= request.POST['offer']
-            print("before ")
+            offers= request.POST['offers']
+            category = request.POST['category']
             if len(request.FILES['img']) != 0:
                 img= request.FILES['img']
-                print("Success ")
-            u = Products.objects.create(name=name,desc=desc,price=price,img=img)
+            c =Category.objects.get(category_name=category)
+            u = Products.objects.create(name=name,desc=desc,price=price,img=img,offer=offers,category=c)
             u.save()
             return redirect("product")
         else:
-            return render(request,'adminside/p_add.html')
+            c=Category.objects.all()
+            return render(request,'adminside/p_add.html',{'categories':c})
     else:   
          return render(request, 'account/adminlogin.html')

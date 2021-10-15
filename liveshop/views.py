@@ -3,7 +3,7 @@ from django.http import request, HttpResponse
 from django.contrib.auth.models import User,auth
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from mainuser.models import Products
+from mainuser.models import Products,Category
 # Create your views here.
 
 
@@ -81,8 +81,9 @@ def home(request):
     if request.session.has_key('username'):
         return redirect('userdisplay')
     else:
+        c=Category.objects.all()
         items = Products.objects.all()
-        return render(request, 'user/index.html',{'products':items,'name1':"login",'name2':"signup"})
+        return render(request, 'user/index.html',{'products':items,'name1':"login",'name2':"signup",'categories':c})
 
 def userdisplay(request):
     if request.session.has_key('username'):

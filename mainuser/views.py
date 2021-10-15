@@ -172,3 +172,4 @@ def additem(request):
             return render(request,'adminside/p_add.html',{'categories':c})
     else:   
          return render(request, 'account/adminlogin.html')
+

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -16,3 +17,7 @@ class Products(models.Model):
     price = models.IntegerField()
     offer = models.BooleanField(default=False)
     category =models.ForeignKey(Category,on_delete=models.CASCADE,default=False)
+
+class Cart(models.Model):
+    pid = models.ForeignKey(Products, on_delete=models.CASCADE)
+    uid = models.ForeignKey(User,on_delete=models.CASCADE)

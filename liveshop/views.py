@@ -3,7 +3,7 @@ from django.http import request, HttpResponse
 from django.contrib.auth.models import User,auth
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from mainuser.models import Products,Category
+from mainuser.models import Products,Category,Cart
 # Create your views here.
 
 
@@ -87,9 +87,36 @@ def home(request):
 
 def userdisplay(request):
     if request.session.has_key('username'):
+        c=Category.objects.all()
         items = Products.objects.all()
         user = User.objects.get(username=request.session['username'])
         name = user.first_name 
-        return render(request, 'user/index.html',{'products':items,'name1':name,'name2':"logout"})
+        return render(request, 'user/index.html',{'products':items,'name1':name,'name2':"logout",'categories':c})
     else:
         return redirect('home')
+
+def product(request,product_id):
+    print(product_id)
+    product = Products.objects.all()
+    product_id =int(product_id)
+    return render(request, 'user/product_details.html',{'product':product,'product_id':product_id})
+
+def cart(request):
+    if request.session.has_key('username'):
+        u = User.objects.get(username=request.session['username'])
+        if request.method == 'POST':
+            product_id = request.POST['product_id']
+
+            p = Products.objects.get(id=product_id)
+    
+            c = Cart.objects.create(uid=u, pid=p)
+            c.save()
+            print("hai")
+            return redirect('cart')
+        else:
+            c = Cart.objects.filter(uid=u.id)
+    
+            return render(request, 'user/cart.html',{'cart':c})
+    else:
+        return redirect('login')
+    

@@ -1,0 +1,162 @@
+{% extends 'user/base.html' %}
+
+{% block content %}
+<!--Section: Block Content-->
+<section class="m-5">
+ {% for c in cart %}
+ {% if c.id == cartid %}
+
+<form action="/order/{{c.id}}/" method="post">
+  {% csrf_token %}
+  <!--Grid row-->
+  <div class="row">
+
+    <!--Grid column-->
+    <div class="col-lg-8 mb-4">
+
+      <!-- Card -->
+      <div class="card wish-list pb-1">
+        <div class="card-body">
+
+          <h5 class="mb-2">Billing details</h5><br>
+
+          <!-- Grid row -->
+          <div class="row">
+
+  <!-- Grid column -->
+            <div class="col-lg-6">
+
+              <!-- First name -->
+              <div class="md-form md-outline mb-0 mb-lg-4">
+                <label for="Name">Name</label>
+                <input type="text" id="Name" name="name" class="form-control mb-0 mb-lg-1">
+                
+              </div>
+
+            </div>
+           <!-- Grid column -->
+
+            
+
+          </div>
+          <!-- Grid row -->
+
+
+
+      
+          
+
+          <!-- Address Part 1 -->
+          <div class="md-form md-outline mt-0">
+            <label for="form14">Address</label>
+            <input type="text" id="form14" name="address" placeholder="House number and street name" class="form-control"><br>
+            <input type="text" id="form15" name="city" placeholder="City"class="form-control"><br>
+            <input type="text" id="form15" name="state" placeholder="State"class="form-control"><br>
+
+             <input type="number" name="pincode" id="form16" placeholder="Pincode" class="form-control"><br>
+            
+          </div>
+
+
+         
+
+          <!-- Phone -->
+          <div class="md-form md-outline">
+              <label for="form18">Phone Number</label>
+            <input name="phone" type="tel" id="form18" class="form-control">
+            
+          </div>
+
+        
+
+          <div class="form-check pl-0 mb-4 mb-lg-0">
+            
+          </div>
+
+        </div>
+      </div>
+        <!-- Card -->
+  
+      </div>
+      <!--Grid column-->
+  
+      <!--Grid column-->
+      <div class="col-lg-4">
+  
+       
+       
+      
+        <!-- Card -->
+        <div class="card mb-4">
+          <div class="card-body">
+  
+            <h5 class="mb-3">{{ c.pid.name }}</h5>
+           
+    
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+               
+                <span>
+                  <img class="img-fluid w-50"
+                  src="{{c.pid.img.url}}" alt="Sample"></span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                Item amount
+                <span>${{ c.pid.price }}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                No.of Items
+                <span>{{c.qty}} items</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                <div>
+                  <strong>The total amount of</strong>
+                  <strong>
+                   
+                  </strong>
+                </div>
+                <span><strong>${% widthratio c.pid.price 1 c.qty %}</strong></span>
+              </li>
+            </ul>
+  
+            <button type="submit" class="btn btn-primary btn-block waves-effect waves-light">Make purchase</button>
+  
+          </div>
+        </div>
+        <!-- Card -->
+       
+      
+
+
+        <!-- Card -->
+        <div class="card mb-4">
+          <div class="card-body">
+
+  
+        
+              <div class="m-3">
+                <div class="form-check pl-0 mb-4 mb-lg-0">
+                  <input type="checkbox" class="form-check-input filled-in" id="new3">
+                  <label class="form-check-label small text-uppercase card-link-secondary" for="new3">Cash on delivery (COD)?</label>
+                </div>
+              
+            </div>
+          </div>
+        </div>
+        <!-- Card -->
+  
+       </form>
+
+      </div>
+      <!--Grid column-->
+  
+    </div>
+    <!--Grid row-->
+  </form>
+
+  {% endif %}
+  {% endfor %}
+  </section>
+  <!--Section: Block Content-->
+
+  {% endblock %}

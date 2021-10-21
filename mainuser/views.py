@@ -4,7 +4,7 @@ from django.contrib.auth.models import User,auth
 from django.contrib.auth import authenticate
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from .models import Products,Category
+from .models import Products,Category,Order
 # Create your views here.
 
 
@@ -173,3 +173,20 @@ def additem(request):
     else:   
          return render(request, 'account/adminlogin.html')
 
+
+def orderdisplay(request):
+    if request.session.has_key('id'):
+
+        if request.method == 'POST':
+            search =  request.POST['q'] 
+            order = Order.objects.filter(
+            name__icontains=search)
+        else:     
+            order = Order.objects.all()
+
+        paginator=Paginator(order,5)
+        page = request.GET.get('page')
+        order=paginator.get_page(page)
+        return render(request, 'adminside/order.html',{"order":order})
+    else:   
+        return render(request, 'account/adminlogin.html')

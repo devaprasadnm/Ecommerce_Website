@@ -1,0 +1,68 @@
+{% extends 'adminside/base.html'%}
+
+
+{% block content %}
+
+
+<div class="container-sm m-5">
+
+
+    <form class="input-group" action="orderdisplay" method="post">
+        {% csrf_token %}
+        <div class="form-outline">
+            <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" aria-label="Search">
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </button>
+    </form>
+
+
+    <br>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>User</th>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Pincode</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for o in order %}
+            <tr>
+                <td>{{o.cartid.uid.first_name}}</td>
+                <td>{{o.cartid.pid.name}}</td>
+                <td>{{o.name}}</td>
+                <td>{{o.address}}</td>
+                <td>{{o.Phone}}</td>
+                <td>{{o.city}}</td>
+                <td>{{o.state}}</td>
+                <td>{{o.pincode}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <ul class="pagination">
+        {% if order.has_previous %}
+        <li class="page-item">
+            <a href="?page=1" class="page-link">
+                << First</a> </li> <li class="page-item">
+                    <a href="{{order.previous_page_link}}" class="page-link">
+                        < Previous</a> </li> {% endif %} {% if order.has_next %} <li class="page-item">
+                            <a href="?page={{order.next_page_number}}" class="page-link">Next ></a>
+        </li>
+        <li class="page-item">
+            <a href="?page={{order.paginator.num_pages}}" class="page-link">Last >></a>
+        </li>
+        {% endif %}
+    </ul>
+
+
+
+</div>
+{% endblock %}

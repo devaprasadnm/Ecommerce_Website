@@ -3,7 +3,7 @@ from django.http import request, HttpResponse
 from django.contrib.auth.models import User,auth
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from mainuser.models import Products,Category,Cart
+from mainuser.models import Products,Category,Cart,Order
 # Create your views here.
 
 
@@ -96,27 +96,94 @@ def userdisplay(request):
         return redirect('home')
 
 def product(request,product_id):
-    print(product_id)
-    product = Products.objects.all()
-    product_id =int(product_id)
-    return render(request, 'user/product_details.html',{'product':product,'product_id':product_id})
-
+    if request.session.has_key('username'):
+        print(product_id)
+        product = Products.objects.all()
+        product_id =int(product_id)
+        user = User.objects.get(username=request.session['username'])
+        name = user.first_name 
+        return render(request, 'user/product_details.html',{'product':product,'product_id':product_id,'name1':name,'name2':"logout"})
+    else:
+        return redirect('home')
+        
 def cart(request):
     if request.session.has_key('username'):
         u = User.objects.get(username=request.session['username'])
         if request.method == 'POST':
             product_id = request.POST['product_id']
+            qty = request.POST['quantity']
+            
 
             p = Products.objects.get(id=product_id)
+
+            if Cart.objects.filter(pid=product_id):
+                Cart.objects.filter(pid=product_id).update(qty=qty)
+            else:
+                c = Cart.objects.create(uid=u, pid=p ,qty=qty)
+                c.save()
     
-            c = Cart.objects.create(uid=u, pid=p)
-            c.save()
-            print("hai")
             return redirect('cart')
         else:
             c = Cart.objects.filter(uid=u.id)
-    
-            return render(request, 'user/cart.html',{'cart':c})
+            items = c.count()
+            user = User.objects.get(username=request.session['username'])
+            name = user.first_name 
+            
+            return render(request, 'user/cart.html',{'cart':c,'items':items,'name1':name,'name2':"logout"})
     else:
         return redirect('login')
+
+def calc(request):
+    if request.session.has_key('username'):
+        if request.method == 'POST':
+            id = request.POST['id']
+            x = request.POST['x']
+            qty = request.POST['qty']
     
+            print(id)
+    
+            if x== 'add':  
+                print("add")
+                qty=int(qty)
+                qty+=1
+                print(qty)
+                Cart.objects.filter(id=id).update(qty=qty)
+                return JsonResponse(
+                            {'success':'add'},
+                            safe = False
+                        )
+            if x == 'minus':
+                print("minus")
+                qty=int(qty)
+                qty-=1   
+                print(qty)
+                Cart.objects.filter(id=id).update(qty=qty)
+                return JsonResponse(
+                            {'success':'minus'},
+                            safe = False
+                        )
+        else:
+            return redirect('login')
+
+def order(request,cartid):
+    if request.session.has_key('username'):
+        if request.method == 'POST':
+            name = request.POST['name']
+            address = request.POST['address']
+            city = request.POST['city']
+            state = request.POST['state']
+            pincode = request.POST['pincode']
+            phone = request.POST['phone']
+
+            c= Cart.objects.get(id=cartid)
+            Order.objects.create(name=name,address=address,city=city,state=state,pincode=pincode,Phone=phone,cartid=c)
+            
+            return redirect('userdisplay')
+        else:
+            c = Cart.objects.all()
+            cartid = int(cartid)
+            user = User.objects.get(username=request.session['username'])
+            name = user.first_name 
+            return render(request,'user/order.html',{'cartid':cartid,'cart':c,'name1':name,'name2':"logout"})
+    else:
+            return redirect('login')

@@ -177,8 +177,9 @@ def order(request,cartid):
 
             c= Cart.objects.get(id=cartid)
             Order.objects.create(name=name,address=address,city=city,state=state,pincode=pincode,Phone=phone,cartid=c)
-            
-            return redirect('userdisplay')
+            cartid = int(cartid)
+            cart = Cart.objects.all()
+            return render(request,'user/payment.html',{'cartid':cartid,'cart':cart,'name1':name,'name2':"logout"})
         else:
             c = Cart.objects.all()
             cartid = int(cartid)

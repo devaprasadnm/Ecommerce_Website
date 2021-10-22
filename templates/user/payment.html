@@ -1,0 +1,118 @@
+{% extends 'user/base.html'%}
+{% block content %}
+
+{% load static%}
+
+{% for c in cart %}
+{% if c.id == cartid %}
+  
+<!--Section: Block Content-->
+<section class="m-5" >
+
+    <!--Grid row-->
+    <div class="row">
+  
+      <!--Grid column-->
+      <div class="col-lg-4 mb-4">
+  
+  
+      </div>
+      <!--Grid column-->
+  
+      <!--Grid column-->
+        
+        <!-- Card -->
+        <div class="card mb-4">
+            <div class="card-body">
+    
+              <h5 class="mb-3">{{ c.pid.name }}</h5>
+             
+      
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                 
+                  <span>
+                    <img class="img-fluid w-50"
+                    src="{{c.pid.img.url}}" alt="Sample"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                  Item amount
+                  <span>${{ c.pid.price }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  No.of Items
+                  <span>{{c.qty}} items</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                  <div>
+                    <strong>The total amount of</strong>
+                    <strong>
+                     
+                    </strong>
+                  </div>
+                  <span><strong>${% widthratio c.pid.price 1 c.qty %}</strong></span>
+                </li>
+              </ul>
+    
+                  <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+
+    <!-- Include the PayPal JavaScript SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AewLiaqaH9ZpJ4mw81JiHvQlD8viVSXcZ0gtqEqtxrOKNz-FGb44VsrUV3Dly4hpakCih8wBzYVFuN2s&currency=USD"></script>
+
+    <script>
+        // Render the PayPal button into #paypal-button-container
+        var total = {% widthratio c.pid.price 1 c.qty %};
+        paypal.Buttons({
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: total
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+                    // Successful capture! For demo purposes:
+                    console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                    var transaction = orderData.purchase_units[0].payments.captures[0];
+                    alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+                    // Replace the above to show a success message within this page, e.g.
+                    // const element = document.getElementById('paypal-button-container');
+                    // element.innerHTML = '';
+                    // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                });
+            }
+
+
+        }).render('#paypal-button-container');
+    </script>
+    
+            </div>
+          </div>
+          <!-- Card -->
+      <!--Grid column-->
+
+      <div class="col-lg-4 mb-4">
+  
+  
+      </div>
+  
+    </div>
+    <!--Grid row-->
+  
+  </section>
+  <!--Section: Block Content-->
+
+  {% endif %}
+  {% endfor %}
+
+{% endblock %}

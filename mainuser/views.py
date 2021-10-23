@@ -190,3 +190,4 @@ def orderdisplay(request):
         return render(request, 'adminside/order.html',{"order":order})
     else:   
         return render(request, 'account/adminlogin.html')
+

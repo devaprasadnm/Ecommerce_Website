@@ -12,4 +12,5 @@ urlpatterns = [
     path('userdisplay',views.userdisplay,name='userdisplay'),
     path('calc',views.calc,name='calc'),
     path('order/<cartid>/',views.order,name='order'),
+    path('category/<cid>/',views.category,name='category'),
 ]

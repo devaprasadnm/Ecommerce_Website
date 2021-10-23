@@ -167,8 +167,10 @@ def calc(request):
 
 def order(request,cartid):
     if request.session.has_key('username'):
+        user = User.objects.get(username=request.session['username'])
+        name = user.first_name 
         if request.method == 'POST':
-            name = request.POST['name']
+            Name = request.POST['name']
             address = request.POST['address']
             city = request.POST['city']
             state = request.POST['state']
@@ -176,15 +178,24 @@ def order(request,cartid):
             phone = request.POST['phone']
 
             c= Cart.objects.get(id=cartid)
-            Order.objects.create(name=name,address=address,city=city,state=state,pincode=pincode,Phone=phone,cartid=c)
+            Order.objects.create(name=Name,address=address,city=city,state=state,pincode=pincode,Phone=phone,cartid=c)
             cartid = int(cartid)
             cart = Cart.objects.all()
             return render(request,'user/payment.html',{'cartid':cartid,'cart':cart,'name1':name,'name2':"logout"})
         else:
             c = Cart.objects.all()
             cartid = int(cartid)
-            user = User.objects.get(username=request.session['username'])
-            name = user.first_name 
             return render(request,'user/order.html',{'cartid':cartid,'cart':c,'name1':name,'name2':"logout"})
+    else:
+            return redirect('login')
+
+def category(request,cid):
+    if request.session.has_key('username'):
+        user = User.objects.get(username=request.session['username'])
+        name = user.first_name 
+        c = Category.objects.get(id=cid)
+        p = Products.objects.filter(category=cid)
+        category = c.category_name
+        return render(request,'user/category.html',{'c_products':p,'category':category,'name1':name,'name2':"logout"})
     else:
             return redirect('login')

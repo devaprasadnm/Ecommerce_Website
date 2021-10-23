@@ -13,8 +13,6 @@ platformdirs==2.3.0
 psycopg2==2.9.1
 psycopg2-binary==2.9.1
 pycodestyle==2.7.0
-PyOpenGL @ file:///C:/Users/Devaprasad%20N%20M/Downloads/PyOpenGL-3.1.5-cp39-cp39-win_amd64.whl
-PyOpenGL-accelerate @ file:///C:/Users/Devaprasad%20N%20M/Downloads/PyOpenGL_accelerate-3.1.5-cp39-cp39-win_amd64.whl
 pytz==2021.1
 six==1.16.0
 sqlparse==0.4.1
